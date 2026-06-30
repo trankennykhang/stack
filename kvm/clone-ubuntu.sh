@@ -5,10 +5,28 @@
 # clear the template
 #sudo cloud-init clean --logs
 
+# Detect OS and verify support
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    OS="$ID"
+else
+    echo "Error: Cannot detect OS. This script only supports Ubuntu or Arch Linux." >&2
+    exit 1
+fi
+
+if [ "$OS" != "ubuntu" ] && [ "$OS" != "arch" ]; then
+    echo "Error: Unsupported OS ($OS). This script only supports Ubuntu or Arch Linux." >&2
+    exit 1
+fi
+
 # Check for cloud-localds and install if missing
 if ! command -v cloud-localds &> /dev/null; then
     echo "cloud-localds not found. Installing cloud-image-utils..."
-    sudo apt-get update && sudo apt-get install -y cloud-image-utils
+    if [ "$OS" = "ubuntu" ]; then
+        sudo apt-get update && sudo apt-get install -y cloud-image-utils
+    elif [ "$OS" = "arch" ]; then
+        sudo pacman -Sy --noconfirm cloud-image-utils
+    fi
 fi
 
 # Check and load configuration
