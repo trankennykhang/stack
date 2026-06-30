@@ -1,0 +1,32 @@
+---
+- name: Install and Configure MySQL
+  hosts: all
+  become: yes  # Run as sudo
+  vars:
+    mysql_port: 3306
+
+  tasks:
+    - name: Install MySQL Server
+      apt:
+        name: mysql-server
+        state: present
+        update_cache: yes
+
+    - name: Ensure MySQL is started and enabled
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+
+    - name: Configure MySQL to listen on all interfaces
+      lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: '^bind-address'
+        line: "bind-address = 0.0.0.0"
+      notify: Restart MySQL
+
+  handlers:
+    - name: Restart MySQL
+      service:
+        name: mysql
+        state: restarted

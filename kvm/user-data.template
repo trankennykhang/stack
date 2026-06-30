@@ -1,0 +1,21 @@
+#cloud-config
+hostname: __HOSTNAME__
+package_update: true
+package_upgrade: true
+# This ensures the machine-id is unique on boot
+system_info:
+  default_user:
+    name: kenny
+# 1. Add keys to the default 'ubuntu' user or a specific user
+users:
+  - name: kenny
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    lock_passwd: false
+    # Paste your PUBLIC key (.pub) here
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCrmaFLF1aGluUVu/lyIIkf0Ic6d8fyrrPC7qapk3gMuqqUBCnLLCEELGZl2nKXVJHc5BtMUlWbdtJK/bwHXQ570ao4QGNFAeHkrBPoY7RwKUPaA2PSko6GJMfeFLK84kKgjAxQdRHlOjnsXBA6+OblkEEeDHK7MfDTIIVq6blLULWsZ0yNTXkGhEaBy0ZBVP77IdFC+PRwxjTdlzMgEslmnAJC13zeY/iRH+dmB7ogxvEcXH1RaewnF22oMKODzQYzySv16t7fg3+clI80DZ844+UwybJVKStxSdln6oXbqB6KzkgE8EnRy47PTcxX7ea1kIFU9RPuFutFz7TYX75HpC+oIWiA2WgCF2gQ88IXik17GcAsfBWPn7K06fI9I0nQJc5p5Qsfw/NRGOD9pwGVg3NPiz9Yi7ekGHnpovjS95SzSvBz7zFJt/YaAj3aygwBaJUUwxzkBBWj1x1N3r2kq6D5yPl7OSOOmSPmQ12Olkv1SVaNnaBNF2kRaUNw6wM= kenny@kenny-HP-Z600-Workstation
+
+# 2. Alternatively, add keys to the system-wide default user
+# Ensure the SSH service is enabled and configured
+ssh_pwauth: false # Good practice: disable password login for security 
